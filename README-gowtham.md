@@ -1,13 +1,19 @@
-## Q1 Widget Tree
+# Gowtham Revanur Personal Reflection
 
-My Flutter app is built as a widget tree. At the top, `MyApp` returns a `MaterialApp`, which contains a `DefaultTabController` with a length of four. Inside it is `_TabsNonScrollableDemo`, which returns a `Scaffold`. The `Scaffold` contains an `AppBar`, a `TabBar`, a `TabBarView`, and a `BottomAppBar`.
+GitHub username: Grevanur
 
-The `TabBarView` contains four pages. Tab 1 uses a `Container`, `Center`, and `Column` with styled text and an `ElevatedButton` that opens an `AlertDialog`. Tab 2 contains a network image and a `TextField`. Tab 3 contains an `ElevatedButton` that displays a `SnackBar`. Tab 4 contains a `ListView` with `Card` and `ListTile` widgets. The `BottomAppBar` contains `Padding` and a `Text` widget.
+## What surprised me most
 
-If I needed to add a fifth tab, I would first update the `DefaultTabController` because it is the parent controller node that declares the number of tabs for its children. In my current code, I would also update `_tabController`, the `tabs` list, and the `TabBarView` children. A cleaner future improvement would be to use `tabs.length` so the number is defined in one place.
+What surprised me most was how the widget tree and controller keep the tabs connected without me manually changing every part of the screen. My `TabBar` and `TabBarView` both use `_tabController`, so selecting a tab updates the visible page and the tab indicator together. I originally thought I would need to directly change text or show and hide widgets myself. Instead, Flutter rebuilds the UI from the current state. Seeing the `Scaffold`, `AppBar`, `TabBar`, `TabBarView`, and four tab pages nested together made the widget tree feel much more real.
 
-## Q2 Stateless versus Stateful
+## Concept that took the longest to understand
 
-`MyApp` is a stateless widget because it only creates the general app structure: `MaterialApp`, `DefaultTabController`, and `_TabsNonScrollableDemo`. It does not store changing data itself. Making it stateful would not improve the app; it would only add unnecessary state and lifecycle code.
+Controllers and lifecycle took the longest to click for me. It became clearer when I saw that `_tabController` is created once in `initState()` instead of inside `build()`. The `build()` method can run many times, but the controller should stay available while the tab screen exists. Then `dispose()` is the matching cleanup step when the screen is removed. Understanding that the controller has a listener and an animation ticker helped me see why forgetting `_tabController.dispose()` could waste resources and create problems in a larger app.
 
-`_TabsNonScrollableDemo` is stateful because it owns `_tabController` and `tabIndex`, which change as the user switches between tabs. It also uses `initState()` to create the controller, `setState()` to update the selected tab index, and `dispose()` to clean up resources. If I changed this widget to stateless, the app could not manage the controller in the same way, listen for tab changes, restore the selected tab, or safely dispose of the controller. The selected-tab behavior would either break or require the state to be moved somewhere else.
+## GitHub workflow reflection
+
+The GitHub workflow that felt least familiar was the difference between a branch on GitHub and a branch on my computer. I created `branchGR` on GitHub, but cloning the repository first placed me on `main`. I used `git branch -a` to see the remote branches, then used `git switch --track origin/branchGR` to connect my local work to the correct branch. I worked through it one command at a time by checking `git status`, adding my changes, committing them, and pushing the branch. This made the branch workflow feel less confusing.
+
+## What I would do differently next time
+
+If I rebuilt this activity tomorrow, I would set up the shared repository, team roles, and branches before writing any answers. I would also sketch the widget tree first and use one source of truth, such as `tabs.length`, for the number of tabs. While building the app, I would test each tab right after changing it and check the widget nesting carefully before changing sizes or layout. For GitHub, I would make smaller commits more often and open the Pull Request earlier so my teammate could review the work sooner.
